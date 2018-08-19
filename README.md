@@ -1,20 +1,25 @@
 # karate
 Karate Docker Image
 
-### Run Regression Test
+### Use it
+
+```sh
+$ docker pull atpio/atlasp-karate
+```
+
+You should have created a features folder with feature files in it, after that you can run as:
+
+```sh
+$ docker run -it --rm -e ENV --name atlasp-karate-running atlasp-karate karate
+```
+
+### Build
+
+```sh
+$ export ENV=dev
+```
 
 ```sh
 $ docker build -t atlasp-karate .
-$ docker run -it --rm --name atlasp-karate-running atlasp-karate
-```
-
-### Create Maven Configutation
-
-```sh
-$ mvn archetype:generate \
--DarchetypeGroupId=com.intuit.karate \
--DarchetypeArtifactId=karate-archetype \
--DarchetypeVersion=0.8.0 \
--DgroupId=io.atlasp \
--DartifactId=karate
+$ docker run -it --rm -e ENV --name atlasp-karate-running atlasp-karate
 ```
