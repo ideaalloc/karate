@@ -4,7 +4,7 @@ Karate Docker Image
 ### Use it
 
 ```sh
-$ docker pull atpio/atlasp-karate
+$ docker pull atpio/atlasp-karate:1.0.0
 ```
 
 You should have created a features folder with feature files in it, after that you can run as:
