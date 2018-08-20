@@ -57,11 +57,23 @@ RUN curl -sL https://dl.google.com/go/go1.10.3.linux-amd64.tar.gz \
 ENV GOPATH /go
 ENV PATH /usr/go/bin:/go/bin:/usr/bin:$PATH
 
+#### Install MySQL
+ENV MYSQL_USER=mysql \
+    MYSQL_DATA_DIR=/var/lib/mysql \
+    MYSQL_RUN_DIR=/run/mysqld \
+    MYSQL_LOG_DIR=/var/log/mysql
+
+RUN apt-get update \
+ && DEBIAN_FRONTEND=noninteractive apt-get install -y mysql-server \
+ && rm -rf ${MYSQL_DATA_DIR} \
+ && rm -rf /var/lib/apt/lists/*
+
 ## VERSIONS ##
 RUN echo "JAVA_HOME=${JAVA_HOME}" && \
     java -version && \
     mvn --version && \
-    go version
+    go version && \
+    mysql --version
 
 #### define working directory.
 RUN mkdir -p /data
