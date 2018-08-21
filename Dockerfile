@@ -8,6 +8,8 @@ ENV DEBIAN_FRONTEND noninteractive
 RUN apt-get update \
   && apt-get install -y automake pkg-config libpcre3-dev zlib1g-dev liblzma-dev \
   && apt-get install -y curl net-tools build-essential software-properties-common libsqlite3-dev sqlite3 bzip2 libbz2-dev git wget unzip vim \
+  && apt-get install -y ca-certificates \
+  && update-ca-certificates \
   && apt-get clean \
   && rm -rf /var/lib/apt/lists/*
 
@@ -50,12 +52,24 @@ RUN curl -sL http://archive.apache.org/dist/maven/maven-3/${MAVEN_VERSION}/binar
   && ln -s ${MAVEN_HOME} /usr/maven
 
 #### Install Golang
+RUN mkdir -p /go/bin
 ENV GOROOT /usr/go
 RUN curl -sL https://dl.google.com/go/go1.10.3.linux-amd64.tar.gz \
   | gunzip \
   | tar x -C /usr/
 ENV GOPATH /go
 ENV PATH /usr/go/bin:/go/bin:/usr/bin:$PATH
+
+#### Install Dep
+RUN curl -fL -o /usr/local/bin/dep \
+         https://github.com/golang/dep/releases/download/v0.5.0/dep-linux-amd64 \
+ && chmod +x /usr/local/bin/dep \
+ && mkdir -p /usr/local/share/doc/dep \
+ && curl -fL -o /usr/local/share/doc/dep/LICENSE \
+         https://raw.githubusercontent.com/golang/dep/v0.5.0/LICENSE \
+ && rm -rf /var/lib/apt/lists/* \
+            /tmp/*
+ENV PATH $PATH:/usr/local/bin
 
 #### Install MySQL
 ENV MYSQL_USER=mysql \
@@ -73,6 +87,7 @@ RUN echo "JAVA_HOME=${JAVA_HOME}" && \
     java -version && \
     mvn --version && \
     go version && \
+    dep version && \
     mysql --version
 
 #### define working directory.
